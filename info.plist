@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.blackntan.ipaddress</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>946C0995-DF35-45EB-8843-9373E79608B5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A676A7B9-9F45-4074-A1D5-A991B462CD62</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Jay Colson</string>
+	<key>description</key>
+	<string>Lists all your IP addresses</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>IP Address Information</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>A676A7B9-9F45-4074-A1D5-A991B462CD62</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>ip</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>getting ip info ...</string>
+				<key>script</key>
+				<string>#!/bin/sh
+suspects=(
+`ifconfig -uv | grep '^[a-z0-9]' | awk -F : '{print $1}'`
+)
+printf "{\"items\": ["
+for i in ${suspects[@]}; do
+	eth=`ifconfig "$i" 2&gt;&amp;1 |  grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'`
+	if [ "${eth}" != "" ]; then
+    ethhost=`dig +short -x ${eth}`
+		if [ "${ethhost}" == "" ]; then
+		  ethhost="REVERSE LOOKUP FAIL"
+		fi
+  	printf "{\"uid\":\"${i}\",\"title\":\"${i}\",\"subtitle\":\"${eth} - ${ethhost}\",\"arg\":\"${eth}\"},"
+	fi
+done
+
+eth=`dig +short myip.opendns.com @resolver1.opendns.com`
+if [ ""${eth} != "" ]; then
+  ethhost=`dig +short -x ${eth}`
+  if [ "${ethhost}" == "" ]; then
+		ethhost="REVERSE LOOKUP FAIL"
+  fi
+  printf "{\"uid\":\"external\",\"title\":\"external\",\"subtitle\":\"${eth} - ${ethhost}\",\"arg\":\"${eth}\"}"
+fi
+printf "]}"
+</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string>~/bin/alfred_ipinfo.sh</string>
+				<key>subtext</key>
+				<string>Get your current IP information</string>
+				<key>title</key>
+				<string>IP Address Info</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>946C0995-DF35-45EB-8843-9373E79608B5</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>IP Address Information.alfredworkflow
+
+Use this to see your local IP address information as well as your internet facing address via Alfred - just type "ip " ...</string>
+	<key>uidata</key>
+	<dict>
+		<key>946C0995-DF35-45EB-8843-9373E79608B5</key>
+		<dict>
+			<key>xpos</key>
+			<integer>150</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>A676A7B9-9F45-4074-A1D5-A991B462CD62</key>
+		<dict>
+			<key>xpos</key>
+			<integer>410</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>v1.0</string>
+	<key>webaddress</key>
+	<string>blackntan.com</string>
+</dict>
+</plist>
