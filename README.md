@@ -1,7 +1,7 @@
 # IP-Address-Information-alfred-workflow
 IP Address Information alfredworkflow
 
-## What do I do?
+## What does this do?
 
 Use this to see your local IP address information as well as your internet facing address via Alfred.  Just type 'IP' in your alfred popup to view your IP address information.
 
